@@ -59,22 +59,30 @@ namespace Simulacro_C_.Models
 
         // Funciones Adicionales
         // Vehiculos
-        public void AddVehiculo()
+        public void AddVehicles()
         {
             int id = Vehicles.Count + 1;
-            string placa = Setting.InputString("Introduzca el placa del vehículo => ");
-            string type = Setting.InputString("Introduzca el tipo del vehículo => ");
+            string placa = Setting.InputString("Introduzca la placa del vehículo => ");
+            string type = Setting.InputString("Introduzca el tipo del vehículo (camioneta, microbus, carro, moto) => ");
             string engineNumber = Setting.InputString("Introduzca el número de motor del vehículo => ");
             string serialNumber = Setting.InputString("Introduzca el número de serie del vehículo => ");
-            byte peopleCapacity = Convert.ToByte(Setting.InputString("Introduzca la capacidad de personas del vehículo => "));
-            string ownerName = Setting.InputString("Introduzca el nombre del conductor del vehículo => ");
+            byte peopleCapacity = Setting.InputByte("Introduzca la capacidad de personas del vehículo => ");
+            string ownerName = Setting.InputString("Introduzca el documento del conductor del vehículo => ");
 
-            Driver? owner = Drivers.Find(d => d.GetName() == ownerName) ?? AddDriver();
-            Vehicles.Add(new Vehicle(id, placa, type, engineNumber, serialNumber, peopleCapacity, owner));
 
-            Console.WriteLine("");
-            Console.WriteLine("Vehículo añadido con éxito!");
-            Console.WriteLine("");
+            if((type == "camioneta" && peopleCapacity <= 4) || (type == "microbus" && peopleCapacity <= 10) || (type == "carro" && peopleCapacity <= 4) || (type == "moto" && peopleCapacity <= 2))
+            {
+                Driver? owner = Drivers.Find(d => d.GetIdentificationNumber() == ownerName) ?? AddDriver();
+                Vehicles.Add(new Vehicle(id, placa, type, engineNumber, serialNumber, peopleCapacity, owner));
+
+                Console.WriteLine("");
+                Console.WriteLine("Vehículo añadido con éxito!");
+                Console.WriteLine("");
+            }
+            else
+            {
+                Console.WriteLine("El tipo del vehículo no es válido");
+            }
         }
 
         public void ShowVehicles()
@@ -117,6 +125,141 @@ namespace Simulacro_C_.Models
             foreach (Driver driver in Drivers)
             {
                 Console.WriteLine($"{driver.GetName()}\t{driver.GetLastName()}\t{driver.GetTypeDocument()}\t{driver.GetIdentificationNumber()}\t{driver.GetBirthDate()}\t{driver.GetEmail()}\t{driver.GetPhoneNumber()}\t{driver.GetAddress()}\t{driver.LicenseNumber}\t{driver.LicenseCategory}\t{driver.DrivingExperience}");
+            }
+        }
+
+        public void UpdateDriver(string name, string lastName)
+        {
+            Driver? driver = Drivers.Find(e => e.GetName() == name && e.GetLastName() == lastName);
+            if (driver != null)
+            {
+                string newname = Setting.InputString("Introduzca el nombre del conductor => ");
+                string newlastName = Setting.InputString("Introduzca el apellido del conductor => "); ;
+                string typeDocument = Setting.InputString("Introduzca el tipo de documento del conductor => ");
+                string identificationNumber = Setting.InputString("Introduzca el número de identificación del conductor => ");
+                DateOnly birthDate = Setting.InputDateOnly("Introduzca la fecha de nacimiento del conductor => ");
+                string email = Setting.InputString("Introduzca el email del conductor => ");
+                string phoneNumber = Setting.InputString("Introduzca el número de teléfono del conductor => ");
+                string address = Setting.InputString("Introduzca la dirección del conductor => ");
+                string licenseNumer = Setting.InputString("Introduzca el número de licencia del conductor => ");
+                string licenseCategory = Setting.InputString("Introduzca la categoría de licencia del conductor => ");
+                int drivingExperience = Setting.InputInt("Introduzca la experiencia de conducción del conductor => ");
+
+                driver.SetName(string.IsNullOrEmpty(name) ? driver.GetName() : name);
+                driver.SetLastName(string.IsNullOrEmpty(lastName) ? driver.GetLastName() : lastName);
+                driver.SetTypeDocument(string.IsNullOrEmpty(typeDocument) ? driver.GetTypeDocument() : typeDocument);
+                driver.SetIdentificationNumber(string.IsNullOrEmpty(identificationNumber) ? driver.GetIdentificationNumber() : identificationNumber);
+                driver.SetBirthDate(birthDate == default ? driver.GetBirthDate() : birthDate);
+                driver.SetEmail(string.IsNullOrEmpty(email) ? driver.GetEmail() : email);
+                driver.SetPhoneNumber(string.IsNullOrEmpty(phoneNumber) ? driver.GetPhoneNumber() : phoneNumber);
+                driver.SetAddress(string.IsNullOrEmpty(address) ? driver.GetAddress() : address);
+                driver.LicenseNumber = string.IsNullOrEmpty(licenseNumer) ? driver.LicenseNumber : licenseNumer;
+                driver.LicenseCategory = string.IsNullOrEmpty(licenseCategory) ? driver.LicenseCategory : licenseCategory;
+                driver.DrivingExperience = drivingExperience == 0 ? driver.DrivingExperience : drivingExperience;
+
+                Console.WriteLine("");
+                Console.WriteLine("Datos actualizados con éxito!");
+                Console.WriteLine("");
+            }
+        }
+
+        public void DeleteDriver(string name, string lastName)
+        {
+            Driver? driver = Drivers.Find(e => e.GetName() == name && e.GetLastName() == lastName);
+            if (driver != null)
+            {
+                Drivers.Remove(driver);
+
+                Console.WriteLine("");
+                Console.WriteLine("Conductor eliminado con éxito!");
+                Console.WriteLine("");
+            }
+            else
+            {
+                Console.WriteLine("El conductor no existe");
+            }
+        }
+    
+        // Customers
+        public Customer AddCustomer()
+        {
+            string name = Setting.InputString("Introduzca el nombre del cliente => ");
+            string lastName = Setting.InputString("Introduzca el apellido del cliente => ");
+            string typeDocument = Setting.InputString("Introduzca el tipo de documento del cliente => ");
+            string identificationNumber = Setting.InputString("Introduzca el número de identificación del cliente => ");
+            DateOnly birthDate = Setting.InputDateOnly("Introduzca la fecha de nacimiento del cliente => ");
+            string email = Setting.InputString("Introduzca el email del cliente => ");
+            string phoneNumber = Setting.InputString("Introduzca el número de teléfono del cliente => ");
+            string address = Setting.InputString("Introduzca la dirección del cliente => ");
+            string membershipLevel = Setting.InputString("Introduzca la categoría de membresía del cliente => ");
+            string preferredPaymentMethod = Setting.InputString("Introduzca el método de pago preferido del cliente => ");
+
+            Customer newCustomer = new Customer(name, lastName, typeDocument, identificationNumber, birthDate, email, phoneNumber, address, membershipLevel, preferredPaymentMethod);
+
+            Customers.Add(newCustomer);
+
+            Console.WriteLine("");
+            Console.WriteLine("Cliente añadido con éxito!");
+            Console.WriteLine("");
+            return newCustomer;
+        }
+
+        public void ShowCustomers()
+        {
+            Console.WriteLine("ID\tNombre\tApellido\tTipo de documento\tNúmero de identificación\tFecha de nacimiento\tEmail\tTeléfono\tDirección\tMembresía\tMétodo de pago preferido");
+            foreach (Customer customer in Customers)
+            {
+                Console.WriteLine($"{customer.GetName()}\t{customer.GetLastName()}\t{customer.GetTypeDocument()}\t{customer.GetIdentificationNumber()}\t{customer.GetBirthDate()}\t{customer.GetEmail()}\t{customer.GetPhoneNumber()}\t{customer.GetAddress()}\t{customer.MembershipLevel}\t{customer.PreferredPaymentMethod}");
+            }
+        }
+
+        public void UpdateCustomer(string name, string lastName)
+        {
+            Customer? customer = Customers.Find(e => e.GetName() == name && e.GetLastName() == lastName);
+            if (customer != null)
+            {
+                string newname = Setting.InputString("Introduzca el nombre del cliente => ");
+                string newlastName = Setting.InputString("Introduzca el apellido del cliente => "); ;
+                string typeDocument = Setting.InputString("Introduzca el tipo de documento del cliente => ");
+                string identificationNumber = Setting.InputString("Introduzca el número de identificación del cliente => ");
+                DateOnly birthDate = Setting.InputDateOnly("Introduzca la fecha de nacimiento del cliente => ");
+                string email = Setting.InputString("Introduzca el email del cliente => ");
+                string phoneNumber = Setting.InputString("Introduzca el número de teléfono del cliente => ");
+                string address = Setting.InputString("Introduzca la dirección del cliente => ");
+                string membershipLevel = Setting.InputString("Introduzca la categoría de membresía del cliente => ");
+                string preferredPaymentMethod = Setting.InputString("Introduzca el método de pago preferido del cliente => ");
+
+                customer.SetName(string.IsNullOrEmpty(name) ? customer.GetName() : name);
+                customer.SetLastName(string.IsNullOrEmpty(lastName) ? customer.GetLastName() : lastName);
+                customer.SetTypeDocument(string.IsNullOrEmpty(typeDocument) ? customer.GetTypeDocument() : typeDocument);
+                customer.SetIdentificationNumber(string.IsNullOrEmpty(identificationNumber) ? customer.GetIdentificationNumber() : identificationNumber);
+                customer.SetBirthDate(birthDate == default ? customer.GetBirthDate() : birthDate);
+                customer.SetEmail(string.IsNullOrEmpty(email) ? customer.GetEmail() : email);
+                customer.SetPhoneNumber(string.IsNullOrEmpty(phoneNumber) ? customer.GetPhoneNumber() : phoneNumber);
+                customer.SetAddress(string.IsNullOrEmpty(address) ? customer.GetAddress() : address);
+                customer.MembershipLevel = string.IsNullOrEmpty(membershipLevel) ? customer.MembershipLevel : membershipLevel;
+                customer.PreferredPaymentMethod = string.IsNullOrEmpty(preferredPaymentMethod) ? customer.PreferredPaymentMethod : preferredPaymentMethod;
+
+                Console.WriteLine("");
+                Console.WriteLine("Datos actualizados con éxito!");
+                Console.WriteLine("");
+            }
+        }
+
+        public void DeleteCustomer(string name, string lastName)
+        {
+            Customer? customer = Customers.Find(e => e.GetName() == name && e.GetLastName() == lastName);
+            if (customer != null)
+            {
+                Customers.Remove(customer);
+
+                Console.WriteLine("");
+                Console.WriteLine("Cliente eliminado con éxito!");
+                Console.WriteLine("");
+            }
+            else
+            {
+                Console.WriteLine("El cliente no existe");
             }
         }
     }
