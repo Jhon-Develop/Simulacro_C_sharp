@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# settings
+Models/Settings.cs
+
 # User-specific files
 *.rsuser
 *.suo
