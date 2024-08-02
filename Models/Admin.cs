@@ -70,7 +70,7 @@ namespace Simulacro_C_.Models
             string ownerName = Setting.InputString("Introduzca el documento del conductor del vehículo => ");
 
 
-            if((type == "camioneta" && peopleCapacity <= 4) || (type == "microbus" && peopleCapacity <= 10) || (type == "carro" && peopleCapacity <= 4) || (type == "moto" && peopleCapacity <= 2))
+            if ((type == "camioneta" && peopleCapacity <= 4) || (type == "microbus" && peopleCapacity <= 10) || (type == "carro" && peopleCapacity <= 4) || (type == "moto" && peopleCapacity <= 2))
             {
                 Driver? owner = Drivers.Find(d => d.GetIdentificationNumber() == ownerName) ?? AddDriver();
                 Vehicles.Add(new Vehicle(id, placa, type, engineNumber, serialNumber, peopleCapacity, owner));
@@ -179,7 +179,7 @@ namespace Simulacro_C_.Models
                 Console.WriteLine("El conductor no existe");
             }
         }
-    
+
         // Customers
         public Customer AddCustomer()
         {
