@@ -7,7 +7,7 @@
 .env
 
 # settings
-Models/Settings.cs
+Models/Setting.cs
 
 # User-specific files
 *.rsuser
